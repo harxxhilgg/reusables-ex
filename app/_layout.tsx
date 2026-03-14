@@ -16,9 +16,15 @@ export default function RootLayout() {
   const { theme } = useUniwind();
 
   return (
-    <ThemeProvider value={NAV_THEME[theme ?? 'light']}>
+    <ThemeProvider value={NAV_THEME[(theme ?? 'light') as 'light' | 'dark']}>
       <StatusBar style={theme === 'dark' ? 'light' : 'dark'} />
-      <Stack />
+      <Stack>
+        <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+        <Stack.Screen name="(protected)" options={{ headerTitle: "Home", headerShown: false }} />
+
+        <Stack.Screen name="second" />
+        <Stack.Screen name="third" />
+      </Stack>
       <PortalHost />
     </ThemeProvider>
   );
