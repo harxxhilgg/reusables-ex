@@ -39,7 +39,3 @@ yarn-error.*
 
 expo-env.d.ts
 # @end expo-cli
-
-# temp -> fix in next push
-/ios
-/android
