@@ -1,57 +1,56 @@
 import { Button } from '@/components/ui/button';
-import { Icon } from '@/components/ui/icon';
 import { Text } from '@/components/ui/text';
-import { Link, router, Stack } from 'expo-router';
-import { MoonStarIcon, StarIcon, SunIcon } from 'lucide-react-native';
+import { router, Stack } from 'expo-router';
+import { ArrowRight } from 'lucide-react-native';
 import * as React from 'react';
-import { Image, type ImageStyle, View } from 'react-native';
-import { Uniwind, useUniwind } from 'uniwind';
+import { Image, useColorScheme, View } from 'react-native';
+import ArrowTriangleHead from '@/assets/icons/arrow-triangle-head.svg';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import ThemeToggle from '@/components/theme-toggle';
 
 export default function Screen() {
+  const scheme = useColorScheme();
+
   return (
     <>
       <Stack.Screen
         options={{
           headerShown: true,
-          title: "React Native Reusables",
-          headerTransparent: false,
-          headerRight: () => <ThemeToggle />,
+          headerTransparent: true,
+          headerTitle: "",
+          headerRight: () => <ThemeToggle variant="ghost" />,
+          headerLeft: () => <LeftIcon />
         }}
       />
 
-      <View className="flex-1 items-center justify-center">
-        <Button
-          variant="outline"
-          className="rounded-2xl px-6"
-          onPress={() => router.replace("/(auth)/login")}
-        >
-          <Text>Sign In</Text>
-        </Button>
-      </View>
+      <SafeAreaView style={{ flex: 1 }} edges={["top", "bottom"]}>
+        <View className="flex-1 items-center justify-between mt-[50%]">
+          <Image
+            source={require("@/assets/images/landing-page-one.png")}
+            style={{ height: 300, width: 300 }}
+            className="left-9"
+          />
+
+          <View className="gap-4 w-full">
+            <Text variant="h2" className="border-0 text-center">Welcome to MinimaL</Text>
+
+            <Button
+              variant="default"
+              className="rounded-full gap-1.5 w-[90%] mx-auto mb-2"
+              onPress={() => router.replace("/(auth)/signin")}
+            >
+              <Text>Continue</Text>
+              <ArrowRight size={15} strokeWidth={2} color={`${scheme === "dark" ? "black" : "white"}`} />
+            </Button>
+          </View>
+        </View>
+      </SafeAreaView>
     </>
   );
 }
 
-const THEME_ICONS = {
-  light: SunIcon,
-  dark: MoonStarIcon,
-};
+function LeftIcon() {
+  const scheme = useColorScheme();
 
-function ThemeToggle() {
-  const { theme } = useUniwind();
-
-  function toggleTheme() {
-    const newTheme = theme === 'dark' ? 'light' : 'dark';
-    Uniwind.setTheme(newTheme);
-  }
-
-  return (
-    <Button
-      onPressIn={toggleTheme}
-      size="icon"
-      variant="ghost"
-      className="ios:size-9 web:mx-4 rounded-full">
-      <Icon as={THEME_ICONS[(theme ?? 'light') as 'light' | 'dark']} className="size-5" />
-    </Button>
-  );
+  return <ArrowTriangleHead width={24} height={24} color={scheme === 'dark' ? 'white' : 'black'} style={{ transform: [{ rotate: '45deg' }] }} />;
 }

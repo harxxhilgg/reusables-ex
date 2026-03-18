@@ -5,13 +5,10 @@
     "slug": "minimal",
     "version": "1.0.0",
     "orientation": "portrait",
-
     "icon": "./assets/images/icon.png",
-
     "scheme": "minimal",
     "userInterfaceStyle": "automatic",
     "assetBundlePatterns": ["**/*"],
-
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.harshil0.minimal",
@@ -21,7 +18,6 @@
         "tinted": "./assets/icons/ios-tinted.png"
       }
     },
-
     "android": {
       "package": "com.harshil0.minimal",
       "adaptiveIcon": {
@@ -31,7 +27,6 @@
       },
       "predictiveBackGestureEnabled": true
     },
-
     "web": {
       "bundler": "metro",
       "output": "static",
@@ -57,9 +52,14 @@
         {
           "launchMode": "most-recent"
         }
+      ],
+      [
+        "expo-image",
+        {
+          "disableLibdav1d": false
+        }
       ]
     ],
-
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true

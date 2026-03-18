@@ -12,11 +12,11 @@ export default function HomeScreen() {
         <Button
           variant="outline"
           className="px-6 rounded-2xl"
-          onPress={() => router.push("/second")}
+          onPress={() => router.push({ pathname: "/second", params: { from: "Home" } })}
         >
           <Text>Push to /second</Text>
         </Button>
       </View>
-    </View>
+    </View >
   );
 }
