@@ -12,8 +12,5 @@ function requiredEnv(value: string | undefined, name: string): string {
 export const env = {
   API_URL: requiredEnv(process.env.EXPO_PUBLIC_API_URL, 'EXPO_PUBLIC_API_URL'),
   SUPABASE_URL: requiredEnv(process.env.EXPO_PUBLIC_SUPABASE_URL, 'EXPO_PUBLIC_SUPABASE_URL'),
-  SUPABASE_ANON_KEY: requiredEnv(
-    process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY,
-    'EXPO_PUBLIC_SUPABASE_ANON_KEY'
-  ),
+  SUPABASE_ANON_KEY: requiredEnv(process.env.EXPO_PUBLIC_SUPABASE_KEY, 'EXPO_PUBLIC_SUPABASE_KEY'),
 };

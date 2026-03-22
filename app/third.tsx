@@ -1,10 +1,10 @@
-import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
-import { router, Stack, useLocalSearchParams } from 'expo-router';
-import { View } from 'react-native';
+import { Stack, useLocalSearchParams } from 'expo-router';
+import { useColorScheme, View } from 'react-native';
 
 export default function ThirdScreen() {
   const { from } = useLocalSearchParams<{ from: string }>();
+  const scheme = useColorScheme();
 
   return (
     <>
@@ -13,7 +13,7 @@ export default function ThirdScreen() {
           headerShown: true,
           headerTitle: "Third",
           headerBackTitle: from,
-          headerStyle: { backgroundColor: "#1C1C1E" },
+          headerStyle: { backgroundColor: `${scheme === "dark" ? "#1C1C1E" : "#F2F2F7"}` },
           headerBackButtonDisplayMode: "minimal",
         }}
       />

@@ -1,7 +1,8 @@
-import { Uniwind, useUniwind } from "uniwind";
+import { useUniwind } from "uniwind";
 import { Button } from "./ui/button";
 import { MoonStarIcon, SunIcon } from "lucide-react-native";
 import { Icon } from "./ui/icon";
+import { toggleAppTheme } from "@/lib/utils";
 
 const THEME_ICONS = {
   light: SunIcon,
@@ -16,8 +17,7 @@ export default function ThemeToggle({ variant = "outline" }: Props) {
   const { theme } = useUniwind();
 
   function toggleTheme() {
-    const newTheme = theme === 'dark' ? 'light' : 'dark';
-    Uniwind.setTheme(newTheme);
+    toggleAppTheme(theme);
   }
 
   return (
