@@ -1,83 +1,61 @@
 import '@/global.css';
+import { Provider } from 'react-redux';
+import { store } from '@/lib/store';
+import { useAppDispatch, useAppSelector } from '@/lib/store/hooks';
+import { initializeAuth } from '@/lib/store/slices/authSlice';
+import { useEffect } from 'react';
 import { AnimatedSplashOverlay } from '@/components/animated-splash-overlay';
 import { NAV_THEME } from '@/lib/theme';
 import { ThemeProvider } from '@react-navigation/native';
 import { PortalHost } from '@rn-primitives/portal';
-import { Stack, useRouter, useSegments } from 'expo-router';
+import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { useUniwind } from 'uniwind';
-import { log } from '@/lib/logger';
-import { useEffect, useState } from 'react';
-import { Session } from '@supabase/supabase-js';
-import { supabase } from '@/lib/supabase';
 import { Toaster } from "sonner-native";
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { themeStorage } from '@/lib/storage';
-import { setAppTheme } from '@/lib/utils';
+import { useAuthSession } from '@/hooks/use-auth-session';
+import { useAuthRedirect } from '@/hooks/use-auth-redirect';
+import { useThemeInit } from '@/hooks/use-theme-init';
+import { useFonts, Geist_400Regular, Geist_700Bold, Geist_500Medium, Geist_600SemiBold } from '@expo-google-fonts/geist';
+import {
+  GeistMono_400Regular,
+  GeistMono_500Medium,
+  GeistMono_600SemiBold,
+  GeistMono_700Bold
+} from '@expo-google-fonts/geist-mono';
 
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,
 } from 'expo-router';
 
-export default function RootLayout() {
+function RootLayoutContent() {
+  const dispatch = useAppDispatch();
+  const initialized = useAppSelector(state => state.auth.initialized);
+
+  useEffect(() => {
+    dispatch(initializeAuth());
+  }, [dispatch]);
+
   const { theme } = useUniwind();
+  const { session, loading } = useAuthSession();
 
-  useEffect(() => {
-    if (__DEV__) {
-      log.info("DEVELOPMENT MODE");
-    }
+  useThemeInit();
+  useAuthRedirect(session, loading);
 
-    const savedTheme = themeStorage.getTheme();
+  const [fontsLoaded] = useFonts({
+    Geist: Geist_400Regular,
+    GeistMedium: Geist_500Medium,
+    GeistSemiBold: Geist_600SemiBold,
+    GeistBold: Geist_700Bold,
+    GeistMono: GeistMono_400Regular,
+    GeistMonoMedium: GeistMono_500Medium,
+    GeistMonoSemiBold: GeistMono_600SemiBold,
+    GeistMonoBold: GeistMono_700Bold,
+  });
 
-    if (savedTheme) {
-      setAppTheme(savedTheme);
-    } else {
-      setAppTheme("dark");
-    }
-  }, []);
-
-  const [session, setSession] = useState<Session | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const router = useRouter();
-  const segments = useSegments();
-
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setLoading(false);
-    });
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
-
-  useEffect(() => {
-    if (loading) return;
-
-    const inAuthGroup = segments[0] === '(auth)';
-    const inProtectedGroup = segments[0] === '(protected)';
-    // Check if on landing page (empty array at app start, or 'index' route)
-    // @ts-expect-error - segments can be empty at runtime when app loads
-    const onIndexPage = segments.length === 0 || segments[0] === 'index';
-
-    if (!session && inProtectedGroup) {
-      // Redirect to sign in if not authenticated
-      router.replace('/(auth)/signin');
-    } else if (session && inAuthGroup) {
-      // Redirect to home if already authenticated
-      router.replace('/(protected)/home');
-    } else if (session && onIndexPage) {
-      // If on landing page (index) and authenticated, redirect to home
-      router.replace('/(protected)/home');
-    }
-  }, [session, segments, loading]);
-
-  if (loading) {
+  if (!initialized || loading || !fontsLoaded) {
     return <AnimatedSplashOverlay />;
   }
 
@@ -86,7 +64,6 @@ export default function RootLayout() {
       <KeyboardProvider statusBarTranslucent>
         <ThemeProvider value={NAV_THEME[(theme ?? 'light') as 'light' | 'dark']}>
           <StatusBar style={theme === 'dark' ? 'light' : 'dark'} />
-          <AnimatedSplashOverlay />
           <Stack>
             <Stack.Screen name="(auth)" options={{ headerShown: false }} />
             <Stack.Screen name="(protected)" options={{ headerShown: false }} />
@@ -94,11 +71,29 @@ export default function RootLayout() {
             <Stack.Screen name="second" />
             <Stack.Screen name="third" />
             <Stack.Screen name="settings" />
+            <Stack.Screen
+              name="test-sheet-modal"
+              options={{
+                title: "Form Sheet Modal",
+                headerShown: false,
+                presentation: "formSheet",
+                sheetAllowedDetents: [0.55, 1],
+                sheetCornerRadius: 50,
+              }}
+            />
           </Stack>
           <PortalHost />
           <Toaster invert closeButton />
         </ThemeProvider>
       </KeyboardProvider>
     </GestureHandlerRootView>
+  );
+}
+
+export default function RootLayout() {
+  return (
+    <Provider store={store}>
+      <RootLayoutContent />
+    </Provider>
   );
 }

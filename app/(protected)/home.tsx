@@ -6,7 +6,7 @@ import { View } from 'react-native';
 export default function HomeScreen() {
   return (
     <View className="flex-1 items-center justify-center">
-      <Text className="text-xl font-semibold">Home</Text>
+      <Text variant="h2" weight="semibold" className="border-0">Home</Text>
 
       <View className="my-6">
         <Button
@@ -14,7 +14,7 @@ export default function HomeScreen() {
           className="px-6 rounded-2xl"
           onPress={() => router.push({ pathname: "/second", params: { from: "Home" } })}
         >
-          <Text>Push to /second</Text>
+          <Text >Push to /second</Text>
         </Button>
       </View>
     </View >

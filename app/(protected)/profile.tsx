@@ -3,6 +3,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Text } from '@/components/ui/text';
+import { useAppSelector } from '@/lib/store/hooks';
 import { supabase } from '@/lib/supabase';
 import { User } from '@supabase/supabase-js';
 import { useRouter } from 'expo-router';
@@ -14,30 +15,15 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 export default function ProfileScreen() {
   const scheme = useColorScheme();
   const router = useRouter();
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
 
-  useEffect(() => {
-    async function getUser() {
-      const { data: { user }, error } = await supabase.auth.getUser();
-
-      if (error) {
-        Alert.alert("Error", error.message);
-      } else {
-        setUser(user)
-      }
-
-      setLoading(false);
-    };
-
-    getUser()
-  }, []);
+  const user = useAppSelector(state => state.auth.user);
+  const loading = useAppSelector(state => state.auth.loading);
 
   return (
     <SafeAreaView style={{ flex: 1 }} edges={["top", "bottom"]}>
       <View className="flex-1 w-full mx-auto gap-6">
         <View className="flex-row pl-4 pr-3 items-center justify-between">
-          <Text variant="h4" className="font-semibold">My Account</Text>
+          <Text variant="h4" weight="semibold">My Account</Text>
 
           <SettingsDropdown />
         </View>
@@ -62,8 +48,8 @@ export default function ProfileScreen() {
               </Avatar>
 
               <View className="items-center gap-0.5">
-                <Text variant="h4">{user?.user_metadata.full_name}</Text>
-                <Text variant="muted">{user?.email}</Text>
+                <Text variant="h3" weight="semibold">{user?.user_metadata.full_name}</Text>
+                <Text variant="muted" weight="medium">{user?.email}</Text>
               </View>
             </View>
           )}

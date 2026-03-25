@@ -16,23 +16,21 @@ const textVariants = cva(
       variant: {
         default: '',
         h1: cn(
-          'text-center text-4xl font-extrabold tracking-tight',
+          'text-center text-4xl tracking-tight',
           Platform.select({ web: 'scroll-m-20 text-balance' })
         ),
         h2: cn(
-          'border-border border-b pb-2 text-3xl font-semibold tracking-tight',
+          'border-border border-b pb-2 text-3xl tracking-tight',
           Platform.select({ web: 'scroll-m-20 first:mt-0' })
         ),
-        h3: cn('text-2xl font-semibold tracking-tight', Platform.select({ web: 'scroll-m-20' })),
-        h4: cn('text-xl font-semibold tracking-tight', Platform.select({ web: 'scroll-m-20' })),
+        h3: cn('text-2xl tracking-tight', Platform.select({ web: 'scroll-m-20' })),
+        h4: cn('text-xl tracking-tight', Platform.select({ web: 'scroll-m-20' })),
         p: 'mt-3 leading-7 sm:mt-6',
         blockquote: 'mt-4 border-l-2 pl-3 italic sm:mt-6 sm:pl-6',
-        code: cn(
-          'bg-muted relative rounded px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold'
-        ),
+        code: 'bg-muted rounded px-[0.3rem] py-[0.2rem] font-mono text-sm',
         lead: 'text-muted-foreground text-xl',
-        large: 'text-lg font-semibold',
-        small: 'text-sm font-medium leading-none',
+        large: 'text-lg',
+        small: 'text-sm leading-none',
         muted: 'text-muted-foreground text-sm',
       },
     },
@@ -41,6 +39,20 @@ const textVariants = cva(
     },
   }
 );
+
+// 🔥 FONT MAP (REAL FIX)
+const FONT_MAP = {
+  regular: 'Geist',
+  medium: 'GeistMedium',
+  semibold: 'GeistSemiBold',
+  bold: 'GeistBold',
+  mono: 'GeistMono',
+  monoMedium: 'GeistMonoMedium',
+  monoSemiBold: 'GeistMonoSemiBold',
+  monoBold: 'GeistMonoBold',
+} as const;
+
+type Weight = keyof typeof FONT_MAP;
 
 type TextVariantProps = VariantProps<typeof textVariants>;
 
@@ -68,16 +80,24 @@ function Text({
   className,
   asChild = false,
   variant = 'default',
+  weight = 'regular',
+  style,
   ...props
 }: React.ComponentProps<typeof RNText> &
   TextVariantProps &
   React.RefAttributes<RNText> & {
     asChild?: boolean;
+    weight?: Weight;
   }) {
   const textClass = React.useContext(TextClassContext);
   const Component = asChild ? Slot.Text : RNText;
+
   return (
     <Component
+      style={[
+        { fontFamily: FONT_MAP[weight] }, // ✅ ALWAYS WORKS
+        style,
+      ]}
       className={cn(textVariants({ variant }), textClass, className)}
       role={variant ? ROLE[variant] : undefined}
       aria-level={variant ? ARIA_LEVEL[variant] : undefined}

@@ -24,6 +24,7 @@ import { toast } from 'sonner-native';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { useMMKVBoolean, useMMKVNumber, useMMKVString } from 'react-native-mmkv';
 import { toggleAppTheme } from '@/lib/utils';
+import { router } from 'expo-router';
 
 export default function ExperimentScreen() {
   const scheme = useColorScheme();
@@ -54,7 +55,7 @@ export default function ExperimentScreen() {
         stickyHeaderIndices={[0]}
       >
         <View className="pb-4">
-          <Text variant="h4" className={`text-center pb-2 ${scheme === "dark" ? "bg-black" : "bg-white"}`}>
+          <Text variant="h4" weight="semibold" className={`text-center pb-2 ${scheme === "dark" ? "bg-black" : "bg-white"}`}>
             Experiment
           </Text>
 
@@ -111,7 +112,7 @@ export default function ExperimentScreen() {
             </AspectRatio>
           </View>
 
-          <Text variant="code">API_URL: ${env.API_URL}</Text>
+          <Text weight="mono" className="bg-primary/10 px-3 py-1 rounded-xl">API_URL: ${env.API_URL}</Text>
 
           <View className="flex-row gap-1.5">
             <Avatar alt="harxxhilgg github avatar" className="size-10">
@@ -421,7 +422,7 @@ export default function ExperimentScreen() {
           </View>
 
           <View className="w-full min-w-[30%] max-w-[65%] gap-2">
-            <Text variant="h4">
+            <Text variant="h4" weight="semibold">
               Saved Name: {savedName || "None"}
             </Text>
 
@@ -469,6 +470,33 @@ export default function ExperimentScreen() {
               }}
             >
               <Text>Clear All</Text>
+            </Button>
+          </View>
+
+          <View className="gap-2">
+            <View className="items-center">
+              <Text variant="h1" weight="bold">H1 Bold</Text>
+              <Text variant="h2" weight="semibold" className="border-0">H2 Semi</Text>
+              <Text variant="h3" weight="medium">H3 Med</Text>
+              <Text variant="p">Paragraph</Text>
+              <Text variant="small" weight="medium">Small Medium</Text>
+            </View>
+
+            <View className="items-center">
+              <Text weight="mono">const x = 1234567890</Text>
+              <Text weight="monoMedium">console.log(helo)</Text>
+              <Text weight="monoSemiBold">export function onSubmit() { }</Text>
+              <Text weight="monoBold">clear all</Text>
+            </View>
+          </View>
+
+          <View>
+            <Button
+              variant="outline"
+              className="px-10 rounded-2xl"
+              onPress={() => router.push({ pathname: "/test-sheet-modal", params: { from: "Home" } })}
+            >
+              <Text >Open sheet modal</Text>
             </Button>
           </View>
         </View>

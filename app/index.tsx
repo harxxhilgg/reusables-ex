@@ -32,15 +32,15 @@ export default function Screen() {
           />
 
           <View className="gap-4 w-full">
-            <Text variant="h2" className="border-0 text-center">Welcome to MinimaL</Text>
+            <Text variant="h2" weight="semibold" className="border-0 text-center">Welcome to MinimaL</Text>
 
             <Button
               variant="default"
-              className="rounded-full gap-1.5 w-[90%] mx-auto mb-2"
+              className="rounded-full gap-1.5 w-[90%] h-12 mx-auto mb-2"
               onPress={() => router.replace("/(auth)/signin")}
             >
-              <Text>Continue</Text>
-              <ArrowRight size={15} strokeWidth={2} color={`${scheme === "dark" ? "black" : "white"}`} />
+              <Text weight="semibold">Continue</Text>
+              <ArrowRight size={16} strokeWidth={2.5} color={`${scheme === "dark" ? "black" : "white"}`} />
             </Button>
           </View>
         </View>

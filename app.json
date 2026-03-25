@@ -8,9 +8,7 @@
     "icon": "./assets/images/icon.png",
     "scheme": "minimal",
     "userInterfaceStyle": "automatic",
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.harshil0.minimal",
