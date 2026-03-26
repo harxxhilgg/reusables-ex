@@ -4,12 +4,9 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Text } from '@/components/ui/text';
 import { useAppSelector } from '@/lib/store/hooks';
-import { supabase } from '@/lib/supabase';
-import { User } from '@supabase/supabase-js';
 import { useRouter } from 'expo-router';
 import { ChevronRight, Settings } from 'lucide-react-native';
-import { useEffect, useState } from 'react';
-import { Alert, useColorScheme, View } from 'react-native';
+import { useColorScheme, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function ProfileScreen() {

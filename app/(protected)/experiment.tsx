@@ -24,7 +24,7 @@ import { toast } from 'sonner-native';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { useMMKVBoolean, useMMKVNumber, useMMKVString } from 'react-native-mmkv';
 import { toggleAppTheme } from '@/lib/utils';
-import { router } from 'expo-router';
+import { Link, router } from 'expo-router';
 
 export default function ExperimentScreen() {
   const scheme = useColorScheme();
@@ -498,6 +498,47 @@ export default function ExperimentScreen() {
             >
               <Text >Open sheet modal</Text>
             </Button>
+          </View>
+
+          <View>
+            <Link
+              href={{
+                pathname: "/link-preview",
+                params: { from: "Experiment" }
+              }}
+              asChild
+            >
+              <Link.Trigger>
+                <Button
+                  variant="secondary"
+                  size="lg"
+                  className="h-18 w-80 rounded-3xl"
+                >
+                  <View className="items-center">
+                    <Text className="font-bold text-lg">Long Press me</Text>
+                    <Text className="text-muted-foreground">Native link preview will appear</Text>
+                  </View>
+                </Button>
+              </Link.Trigger>
+
+              <Link.Menu>
+                <Link.MenuAction title="Share" icon="square.and.arrow.up" onPress={() => console.log("Shared")} />
+                <Link.MenuAction title="Block" icon="nosign" destructive onPress={() => console.log("Blocked")} />
+              </Link.Menu>
+
+              <Link.Preview
+                style={{
+                  width: 400,
+                  height: 300,
+                  backgroundColor: scheme === "dark" ? "#1C1C1E" : "#F2F2F7",
+                }}
+              >
+                {/* <View className="flex-1 bg-muted justify-center items-center">
+                  <Text variant="h3" weight="semibold">Custom preview content</Text>
+                  <Text variant="muted">Rendered instead of the destination screen</Text>
+                </View> */}
+              </Link.Preview>
+            </Link>
           </View>
         </View>
       </KeyboardAwareScrollView>

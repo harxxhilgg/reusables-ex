@@ -2,7 +2,7 @@ import '@/global.css';
 import { Provider } from 'react-redux';
 import { store } from '@/lib/store';
 import { useAppDispatch, useAppSelector } from '@/lib/store/hooks';
-import { initializeAuth } from '@/lib/store/slices/authSlice';
+import { initializeAuth, setAuth, clearAuth } from '@/lib/store/slices/authSlice';
 import { useEffect } from 'react';
 import { AnimatedSplashOverlay } from '@/components/animated-splash-overlay';
 import { NAV_THEME } from '@/lib/theme';
@@ -14,7 +14,6 @@ import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { useUniwind } from 'uniwind';
 import { Toaster } from "sonner-native";
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { useAuthSession } from '@/hooks/use-auth-session';
 import { useAuthRedirect } from '@/hooks/use-auth-redirect';
 import { useThemeInit } from '@/hooks/use-theme-init';
 import { useFonts, Geist_400Regular, Geist_700Bold, Geist_500Medium, Geist_600SemiBold } from '@expo-google-fonts/geist';
@@ -24,6 +23,7 @@ import {
   GeistMono_600SemiBold,
   GeistMono_700Bold
 } from '@expo-google-fonts/geist-mono';
+import { supabase } from '@/lib/supabase';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -32,14 +32,33 @@ export {
 
 function RootLayoutContent() {
   const dispatch = useAppDispatch();
-  const initialized = useAppSelector(state => state.auth.initialized);
+  const { initialized, loading, session } = useAppSelector(state => state.auth);
 
   useEffect(() => {
-    dispatch(initializeAuth());
+    if (!initialized) {
+      dispatch(initializeAuth());
+    }
+
+    // Set up persistent auth state listener
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session) {
+        dispatch(setAuth({
+          user: session.user,
+          session
+        }));
+      } else {
+        dispatch(clearAuth());
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, [dispatch]);
 
   const { theme } = useUniwind();
-  const { session, loading } = useAuthSession();
 
   useThemeInit();
   useAuthRedirect(session, loading);
@@ -71,6 +90,7 @@ function RootLayoutContent() {
             <Stack.Screen name="second" />
             <Stack.Screen name="third" />
             <Stack.Screen name="settings" />
+            <Stack.Screen name="link-preview" />
             <Stack.Screen
               name="test-sheet-modal"
               options={{

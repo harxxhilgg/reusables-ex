@@ -126,7 +126,7 @@ export default function SignInScreen() {
 
               <Button
                 variant="default"
-                className="rounded-full gap-2 w-full h-12 mx-auto mb-2 bg-[#5865F2]"
+                className="rounded-full gap-2 w-full h-12 mx-auto mb-2 bg-[#5865F2] active:bg-[#5865F290]"
                 onPress={() => handleLogin("discord")}
                 disabled={loading}
               >
